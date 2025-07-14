@@ -55,6 +55,22 @@
                     @yield('content')
                 </div>
             </div>
+            <!-- Page Loader -->
+            <div id="page-loader"
+                style="
+position: fixed;
+top: 0; left: 0;
+width: 100%; height: 100%;
+background: white;
+z-index: 9999;
+display: flex;
+justify-content: center;
+align-items: center;
+">
+                <span class="loader"></span>
+            </div>
+
+
         </div>
         <footer>
             Designed & Developed by Sasitharan
@@ -86,8 +102,46 @@
         footer {
             text-align: center;
             padding: 10px;
-            background-color: #f8f9fa; /* Optional background color */
-            margin-top: auto; /* Push the footer to the bottom */
+            background-color: #f8f9fa;
+            /* Optional background color */
+            margin-top: auto;
+            /* Push the footer to the bottom */
+        }
+
+        .loader {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: inline-block;
+            position: relative;
+            border-top: 4px solid #FFF;
+            border-right: 4px solid transparent;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+
+        .loader::after {
+            content: '';
+            box-sizing: border-box;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border-left: 4px solid #FF3D00;
+            border-bottom: 4px solid transparent;
+            animation: rotation 0.5s linear infinite reverse;
+        }
+
+        @keyframes rotation {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
     </style>
 
@@ -135,6 +189,15 @@
 
     @stack('script')
     @livewireScripts
+    <script>
+        window.addEventListener('load', function() {
+            const loader = document.getElementById('page-loader');
+            if (loader) {
+                loader.style.display = 'none';
+            }
+        });
+    </script>
+
 </body>
 
 </html>

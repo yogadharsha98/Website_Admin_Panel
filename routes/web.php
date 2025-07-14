@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\WebsiteSettings;
+use App\Http\Controllers\Admin\WebsiteSettingsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
@@ -11,19 +13,14 @@ use App\Http\Controllers\Admin\OptionsController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\CustomFieldsController;
 use App\Livewire\Admin\Category\Index as CategoryIndex;
-use App\Livewire\Admin\Location\Index as LocationIndex;
-use App\Http\Controllers\Admin\MembershipPlanController;
-use App\Http\Controllers\Admin\MembershipPackageController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Livewire\Admin\SubCategory\Index as SubCategoryIndex;
-use App\Livewire\Admin\SubLocation\Index as SubLocationIndex;
+use App\Livewire\Admin\Slider\Index as SliderIndex;
 use App\Http\Controllers\Admin\CustomFieldsCategoryController;
-use App\Livewire\MyAccountIndex; // Import the Category Index component
-use App\Livewire\Frontend\CustomerSignIn\Index as CustomerSignInIndex; // Import the SubCategory Index component
 
-// Import the SubCategory Index component
 
-// Import the SubCategory Index component
+
+
 
 /*
 |----------------------------------------------------------------------
@@ -80,6 +77,11 @@ Route::group(['middleware' => ['role:super-admin|admin']], function () {
     Route::prefix('admin')->group(function () {
         Route::get('/category', CategoryIndex::class)->name('category.index'); // Route for Category
         Route::get('/sub-category', SubCategoryIndex::class)->name('sub-category.index'); // Route for SubCategory
+
+        Route::get('/slider', SliderIndex::class)->name('slider.index'); // Route for Slider
+
+        Route::get('/website_settings',[WebsiteSettingsController::class,'index'])->name('admin.website_settings.index');
+        Route::post('/website_settings', [WebsiteSettingsController::class, 'store'])->name('admin.website_settings.store');
 
         Route::get('/custom-field', [CustomFieldsController::class, 'index'])->name('admin.custom-field.index');
         Route::put('custom-field/{field_id}/update-status', [CustomFieldsController::class, 'updateStatus'])

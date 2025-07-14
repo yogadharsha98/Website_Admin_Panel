@@ -3,7 +3,7 @@
       <div class="navbar-brand-wrapper d-flex justify-content-center">
           <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
               <a class="navbar-brand brand-logo" href="index.html">
-                  <div>Mr.Ads <sup class="text-muted">LK</sup></div>
+                  <div>DealzBay<sup class="text-muted">LK</sup></div>
               </a>
 
               <a class="navbar-brand brand-logo-mini" href="index.html"><img src="images/logo-mini.svg"
