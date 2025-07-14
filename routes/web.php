@@ -1,26 +1,22 @@
 <?php
 
-use App\Http\Controllers\Admin\WebsiteSettings;
-use App\Http\Controllers\Admin\WebsiteSettingsController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\CustomFieldsCategoryController;
+use App\Http\Controllers\Admin\CustomFieldsController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\OptionsController;
-use App\Http\Controllers\Admin\CustomerController;
-use App\Http\Controllers\Admin\CustomFieldsController;
-use App\Livewire\Admin\Category\Index as CategoryIndex;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\WebsiteSettingsController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Livewire\Admin\SubCategory\Index as SubCategoryIndex;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
+use App\Livewire\Admin\Category\Index as CategoryIndex;
 use App\Livewire\Admin\Slider\Index as SliderIndex;
-use App\Http\Controllers\Admin\CustomFieldsCategoryController;
-
-
-
-
+use App\Livewire\Admin\SubCategory\Index as SubCategoryIndex;
+use Illuminate\Support\Facades\Route;
 
 /*
 |----------------------------------------------------------------------
@@ -80,12 +76,19 @@ Route::group(['middleware' => ['role:super-admin|admin']], function () {
 
         Route::get('/slider', SliderIndex::class)->name('slider.index'); // Route for Slider
 
-        Route::get('/website_settings',[WebsiteSettingsController::class,'index'])->name('admin.website_settings.index');
+        Route::get('/product', [ProductController::class, 'index'])->name('admin.product.index'); //Route for Products
+        // Fetch subcategories by category ID
+        Route::get('/get-subcategories/{category}', [ProductController::class, 'getSubcategories'])->name('admin.get-subcategories');
+        Route::get('/get-fields/{category}/{subcategory}', [ProductController::class, 'getFieldsByCategorySubcategory']);
+        Route::get('/product/create', [ProductController::class, 'create'])->name('admin.product.create');
+        Route::post('/product', [ProductController::class, 'store'])->name('admin.product.store');
+
+        Route::get('/website_settings', [WebsiteSettingsController::class, 'index'])->name('admin.website_settings.index');
         Route::post('/website_settings', [WebsiteSettingsController::class, 'store'])->name('admin.website_settings.store');
 
         Route::get('/custom-field', [CustomFieldsController::class, 'index'])->name('admin.custom-field.index');
         Route::put('custom-field/{field_id}/update-status', [CustomFieldsController::class, 'updateStatus'])
-        ->name('custom-field.update-status');
+            ->name('custom-field.update-status');
         Route::get('/custom-field/create', [CustomFieldsController::class, 'create'])->name('admin.custom-field.create');
         Route::post('/custom-field', [CustomFieldsController::class, 'store'])->name('admin.custom-field.store');
         Route::get('custom-field/{field}/edit', [CustomFieldsController::class, 'edit']);
@@ -119,7 +122,6 @@ Route::group(['middleware' => ['role:super-admin|admin']], function () {
         Route::get('/customer', [CustomerController::class, 'index'])->name('admin.customer');
         Route::post('/customer/{id}/update-status', [CustomerController::class, 'updateStatus']);
         Route::delete('/customer/{id}', [CustomerController::class, 'destroy'])->name('customer.destroy');
-
 
     });
 

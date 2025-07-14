@@ -51,6 +51,14 @@
 
         <!-- Sliders List -->
         <li class="nav-item">
+            <a class="nav-link" href="{{ url('admin/product') }}">
+                <i class="fas fa-cart-shopping menu-icon" style="color:#96e83e;"></i>
+                <span class="menu-title">Products</span>
+            </a>
+        </li>
+
+        <!-- Sliders List -->
+        <li class="nav-item">
             <a class="nav-link" href="{{ url('admin/slider') }}">
                 <i class="fas fa-images menu-icon" style="color:#e83e8c;"></i>
                 <span class="menu-title">Sliders</span>

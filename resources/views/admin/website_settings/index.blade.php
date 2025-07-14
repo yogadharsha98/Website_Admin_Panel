@@ -23,8 +23,8 @@
                 @csrf
 
                 <div class="card mb-3">
-                    <div class="card-header bg-primary">
-                        <h3 class="text-white mb-0">Website Setting</h3>
+                    <div class="card-header" style="background-color: #58d68d;">
+                        <h6 class="text-white mb-0">Website Setting</h6>
                     </div>
 
                     <div class="card-body">
@@ -61,8 +61,8 @@
                 </div>
 
                 <div class="card mb-3">
-                    <div class="card-header bg-primary">
-                        <h3 class="text-white mb-0">Website Information</h3>
+                    <div class="card-header" style="background-color:#f4d03f ">
+                        <h6 class="text-white mb-0">Website Information</h6>
                     </div>
 
                     <div class="card-body">
@@ -119,8 +119,8 @@
                 </div>
 
                 <div class="card mb-3">
-                    <div class="card-header bg-primary">
-                        <h3 class="text-white mb-0">Website Social Media</h3>
+                    <div class="card-header" style="background-color:#5dade2 ">
+                        <h6 class="text-white mb-0">Website Social Media</h6>
                     </div>
 
                     <div class="card-body">
@@ -150,8 +150,8 @@
                 </div>
 
                 <div class="card mb-3">
-                    <div class="card-header bg-primary">
-                        <h3 class="text-white mb-0">Website Footer</h3>
+                    <div class="card-header" style="background:#af7ac5 ">
+                        <h6 class="text-white mb-0">Website Footer</h6>
                     </div>
 
                     <div class="card-body">

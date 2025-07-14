@@ -3,10 +3,10 @@
 namespace App\Models;
 
 use App\Models\Field;
+use App\Models\Product;
 use App\Models\SubCategory;
 use Illuminate\Support\Str;
 use App\Models\CategoryField;
-use App\Models\MembershipPlan;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -34,10 +34,6 @@ class Category extends Model
         return $this->hasMany(SubCategory::class, 'category_id');
     }
 
-    public function membershipPlans()
-    {
-        return $this->hasMany(MembershipPlan::class, 'category_id');
-    }
 
     public function fields()
     {
@@ -47,5 +43,11 @@ class Category extends Model
     public function categoryFields()
     {
         return $this->hasMany(CategoryField::class, 'category_id');
+    }
+
+    public function products()
+    {
+
+        return $this->hasMany(Product::class,'category_id','id');
     }
 }
