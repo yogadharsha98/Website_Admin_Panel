@@ -8,13 +8,11 @@
                 <x-auth-session-status class="mb-4" :status="session('status')" />
                 <form class="login" method="POST" action="{{ route('login') }}">
                     @csrf
-                    <!-- Form Title -->
-                    <h2 class="text-center mb-4" style="color: #0e0e0e; font-weight: 700;">Admin Login</h2>
                     <div class="login__field">
                         <i class="login__icon fas fa-user"></i>
                         <input type="text" name="email" id="email"
-                            class="login__input form-control-sm @error('email') is-invalid @enderror"
-                            value="{{ old('email') }}" placeholder="Email" required>
+                            class="login__input form-control form-control-lg @error('email') is-invalid @enderror"
+                            value="{{ old('email') }}" placeholder="User name / Email" required>
                         @error('email')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -23,7 +21,8 @@
                     </div>
                     <div class="login__field">
                         <i class="login__icon fas fa-lock"></i>
-                        <input type="password" class="login__input form-control-sm @error('password') is-invalid @enderror"
+                        <input type="password"
+                            class="login__input form-control form-control-lg @error('password') is-invalid @enderror"
                             name="password" id="password" placeholder="Password" required>
                         @error('password')
                             <span class="invalid-feedback" role="alert">
@@ -32,10 +31,11 @@
                         @enderror
                     </div>
                     <!-- Submit Button -->
-                    <button class="button login__submit">
-                        <span class="button__text">{{ __('Login') }}</span>
-                        <i class="button__icon fas fa-chevron-right"></i>
-                    </button>
+                    <div class="mt-3 d-flex justify-content-center"> <!-- Added flex utility classes -->
+                        <button type="submit" class="btn btn-primary btn-sm font-weight-medium auth-form-btn">
+                            {{ __('Login') }}
+                        </button>
+                    </div>
                 </form>
             </div>
             <div class="screen__background">
@@ -154,10 +154,10 @@
             border: none;
             border-bottom: 2px solid #D1D1D4;
             background: none;
-            padding: 5px;
+            padding: 10px;
             padding-left: 24px;
             font-weight: 700;
-            width: 90%;
+            width: 75%;
             transition: .2s;
         }
 
