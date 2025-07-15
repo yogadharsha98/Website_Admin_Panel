@@ -28,7 +28,7 @@
                         </h4>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('admin.product.store') }}" method="POST">
+                        <form action="{{ route('admin.product.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
 
                             <div class="row mb-3">
@@ -64,10 +64,9 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label for="">Small Description(400 Words)</label>
-                                    <textarea name="small_description" id="" class="form-control" rows="4"></textarea>
+                                    <textarea name="small_description" id="small_description" class="form-control" rows="4"></textarea>
                                 </div>
                             </div>
-
 
 
                             <div class="mb-3">
@@ -97,10 +96,16 @@
                                         <input type="text" name="original_price" class="form-control">
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <div class="mb-3">
-                                        <label for="">Selling Price</label>
-                                        <input type="text" name="selling_price" class="form-control">
+                                        <label for="">Starting Price</label>
+                                        <input type="text" name="starting_price" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="mb-3">
+                                        <label for="">Ending Price</label>
+                                        <input type="text" name="ending_price" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -170,21 +175,21 @@
 @endsection
 
 @section('styles')
-<style>
-    form input.form-control,
-    form select.form-control,
-    form textarea.form-control,
-    form input[type="file"].form-control {
-        background-color: #ffffff !important;
-        color: #0f0f0f !important;
-        border-color: #0e0e0e !important;
-    }
+    <style>
+        form input.form-control,
+        form select.form-control,
+        form textarea.form-control,
+        form input[type="file"].form-control {
+            background-color: #ffffff !important;
+            color: #0f0f0f !important;
+            border-color: #0e0e0e !important;
+        }
 
-    form input.form-control::placeholder,
-    form textarea.form-control::placeholder {
-        color: #faf6f6 !important;
-    }
-</style>
+        form input.form-control::placeholder,
+        form textarea.form-control::placeholder {
+            color: #faf6f6 !important;
+        }
+    </style>
 @endsection
 
 
@@ -272,6 +277,12 @@
                 document.getElementById('customFieldsContainer').innerHTML = '';
             }
         }
+        document.querySelector('input[name="name"]').addEventListener('input', function() {
+            let slug = this.value.toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-') // replace spaces and invalid chars with dashes
+                .replace(/^-+|-+$/g, ''); // trim dashes from start and end
+            document.querySelector('input[name="slug"]').value = slug;
+        });
     </script>
 
 @endsection

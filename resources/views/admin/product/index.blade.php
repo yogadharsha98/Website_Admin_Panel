@@ -35,31 +35,65 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Value</th>
+                                        <th>Name</th>
+                                        <th>Category</th>
+                                        <th>SubCategory</th>
+                                        <th>Original Price</th>
+                                        <th>Starting Price</th>
+                                        <th>Ending Price</th>
+                                        <th>Quantity</th>
+                                        <th>Main Image</th>
+                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {{-- @foreach($options as $option)
-                                    <tr>
-                                        <td>{{ $option->id }}</td>
-                                        <td>{{ $option->value }}</td>
-                                        <td>
-                                            <!-- Edit button -->
-                                            <a href="{{ route('admin.options.edit', [$field->id, $option->id]) }}" class="btn btn-primary btn-sm">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <!-- Delete form -->
-                                            <form action="{{ route('admin.options.destroy', [$field->id, $option->id]) }}" method="POST" style="display:inline;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    @endforeach --}}
+                                    @foreach ($products as $product)
+                                        <tr>
+                                            <td>{{ $product->id }}</td>
+                                            <td>{{ $product->name }}</td>
+                                            <td>{{ $product->category?->title ?? 'N/A' }}</td>
+                                            <td>{{ $product->subCategory?->title ?? 'N/A' }}</td>
+                                            <td>{{ $product->original_price }}</td>
+                                            <td>{{ $product->starting_price }}</td>
+                                            <td>{{ $product->ending_price }}</td>
+                                            <td>{{ $product->total_quantity }}</td>
+                                            <td>
+                                                @if($product->main_image)
+                                                    <img src="{{ asset($product->main_image) }}" alt="Main Image" width="60" height="60">
+                                                @else
+                                                    <span class="text-muted">No Image</span>
+                                                @endif
+                                            </td>
+
+                                            <td>
+                                                @if($product->is_active)
+                                                    <span class="badge bg-success">Active</span>
+                                                @else
+                                                    <span class="badge bg-warning text-dark">Non Active</span>
+                                                @endif
+                                            </td>
+
+                                            <td>
+                                                <div class="btn-group">
+                                                    <a href="{{ url('admin/product/' . $product->id . '/edit') }}"
+                                                        class="btn btn-link btn-sm" title="Edit">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <form action="{{ url('admin/product/' . $product->id) }}"
+                                                        method="POST" style="display: inline;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-link btn-sm text-danger"
+                                                            title="Delete"
+                                                            onclick="return confirm('Are you sure you want to delete this Product?')">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>

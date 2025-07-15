@@ -56,7 +56,7 @@ Route::middleware('auth')->group(function () {
 require __DIR__ . '/auth.php';
 
 // Admin routes
-Route::group(['middleware' => ['role:super-admin|admin']], function () {
+Route::group(['middleware' => ['auth', 'role:super-admin|admin']], function () {
 
     Route::resource('permissions', PermissionController::class);
     Route::get('permissions/{permissionId}/delete', [PermissionController::class, 'destroy']);
