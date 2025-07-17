@@ -20,9 +20,9 @@
                 <div class="card">
                     <div class="card-header">
                         <h4>
-                            Products
-                            <a href="{{ route('admin.product.create') }}" class="btn btn-success btn-sm text-white float-end">
-                                Add Products
+                            Sliders
+                            <a href="{{ route('admin.slider.create') }}" class="btn btn-success btn-sm text-white float-end">
+                                Add Slider
                             </a>
                             <a href="{{ url()->current() }}" class="btn btn-info btn-sm text-white float-end mx-2">
                                 Refresh
@@ -31,43 +31,31 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped" id="products_table">
+                            <table class="table table-bordered table-striped" id="slider_table">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Name</th>
-                                        <th>Category</th>
-                                        <th>SubCategory</th>
-                                        <th>Original Price</th>
-                                        <th>Starting Price</th>
-                                        <th>Ending Price</th>
-                                        <th>Quantity</th>
-                                        <th>Main Image</th>
+                                        <th>Title</th>
+                                        <th>Image</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($products as $product)
+                                    @foreach ($sliders as $slider)
                                         <tr>
-                                            <td>{{ $product->id }}</td>
-                                            <td>{{ $product->name }}</td>
-                                            <td>{{ $product->category?->title ?? 'N/A' }}</td>
-                                            <td>{{ $product->subCategory?->title ?? 'N/A' }}</td>
-                                            <td>{{ $product->original_price }}</td>
-                                            <td>{{ $product->starting_price }}</td>
-                                            <td>{{ $product->ending_price }}</td>
-                                            <td>{{ $product->total_quantity }}</td>
+                                            <td>{{ $slider->id }}</td>
+                                            <td>{{ $slider->title }}</td>
                                             <td>
-                                                @if($product->main_image)
-                                                    <img src="{{ asset($product->main_image) }}" alt="Main Image" width="60" height="60">
+                                                @if($slider->image)
+                                                    <img src="{{ asset($slider->image) }}" alt="Main Image" width="60" height="60">
                                                 @else
                                                     <span class="text-muted">No Image</span>
                                                 @endif
                                             </td>
 
                                             <td>
-                                                @if($product->is_active)
+                                                @if($slider->is_active)
                                                     <span class="badge bg-success">Active</span>
                                                 @else
                                                     <span class="badge bg-warning text-dark">Non Active</span>
@@ -76,17 +64,17 @@
 
                                             <td>
                                                 <div class="btn-group">
-                                                    <a href="{{ url('admin/product/' . $product->id . '/edit') }}"
+                                                    <a href="{{ url('admin/slider/' . $slider->id . '/edit') }}"
                                                         class="btn btn-link btn-sm" title="Edit">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
-                                                    <form action="{{ url('admin/product/' . $product->id) }}"
+                                                    <form action="{{ url('admin/slider/' . $slider->id) }}"
                                                         method="POST" style="display: inline;">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="btn btn-link btn-sm text-danger"
                                                             title="Delete"
-                                                            onclick="return confirm('Are you sure you want to delete this Product?')">
+                                                            onclick="return confirm('Are you sure you want to delete this Slider?')">
                                                             <i class="fas fa-trash-alt"></i>
                                                         </button>
                                                     </form>
@@ -105,7 +93,7 @@
 
     <script>
         $(document).ready(function() {
-            $('#products_table').DataTable();
+            $('#slider_table').DataTable();
         });
     </script>
 @endsection

@@ -1,22 +1,24 @@
 <?php
 
-use App\Http\Controllers\Admin\CustomerController;
-use App\Http\Controllers\Admin\CustomFieldsCategoryController;
-use App\Http\Controllers\Admin\CustomFieldsController;
+use App\Http\Controllers\Admin\SliderController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\OptionsController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CustomerController;
+use App\Livewire\Admin\Slider\Index as SliderIndex;
+use App\Http\Controllers\Admin\CustomFieldsController;
+use App\Livewire\Admin\Category\Index as CategoryIndex;
 use App\Http\Controllers\Admin\WebsiteSettingsController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\UserController;
-use App\Livewire\Admin\Category\Index as CategoryIndex;
-use App\Livewire\Admin\Slider\Index as SliderIndex;
 use App\Livewire\Admin\SubCategory\Index as SubCategoryIndex;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\CustomFieldsCategoryController;
 
 /*
 |----------------------------------------------------------------------
@@ -71,10 +73,23 @@ Route::group(['middleware' => ['auth', 'role:super-admin|admin']], function () {
 
     // Admin category and sub-category routes
     Route::prefix('admin')->group(function () {
-        Route::get('/category', CategoryIndex::class)->name('category.index'); // Route for Category
+
+        Route::get('/category', [CategoryController::class, 'index'])->name('admin.category.index');
+        Route::get('/category/create', [CategoryController::class, 'create'])->name('admin.category.create');
+        Route::post('/category', [CategoryController::class, 'store'])->name('admin.category.store');
+        Route::get('/category/{category}/edit', [CategoryController::class, 'edit'])->name('admin.category.edit');
+        Route::put('/category/{category}', [CategoryController::class, 'update'])->name('admin.category.update');
+        Route::delete('/category/{category}', [CategoryController::class, 'destroy'])->name('admin.category.destroy');
+
         Route::get('/sub-category', SubCategoryIndex::class)->name('sub-category.index'); // Route for SubCategory
 
-        Route::get('/slider', SliderIndex::class)->name('slider.index'); // Route for Slider
+        Route::get('/slider', [SliderController::class, 'index'])->name('admin.slider.index');
+        Route::get('/slider/create', [SliderController::class, 'create'])->name('admin.slider.create');
+        Route::post('/slider', [SliderController::class, 'store'])->name('admin.slider.store');
+        Route::get('/slider/{slider}/edit', [SliderController::class, 'edit'])->name('admin.slider.edit');
+        Route::put('/slider/{slider}', [SliderController::class, 'update'])->name('admin.slider.update');
+        Route::delete('/slider/{slider}', [SliderController::class, 'destroy'])->name('admin.slider.destroy');
+
 
         Route::get('/product', [ProductController::class, 'index'])->name('admin.product.index'); //Route for Products
         // Fetch subcategories by category ID
@@ -82,6 +97,11 @@ Route::group(['middleware' => ['auth', 'role:super-admin|admin']], function () {
         Route::get('/get-fields/{category}/{subcategory}', [ProductController::class, 'getFieldsByCategorySubcategory']);
         Route::get('/product/create', [ProductController::class, 'create'])->name('admin.product.create');
         Route::post('/product', [ProductController::class, 'store'])->name('admin.product.store');
+        Route::get('/product/{product}/edit', [ProductController::class, 'edit'])->name('admin.product.edit');
+        Route::put('/product/{product}', [ProductController::class, 'update'])->name('admin.product.update');
+        Route::delete('/product/{product}', [ProductController::class, 'destroy'])->name('admin.product.destroy');
+        Route::delete('/product-image/{id}', [ProductController::class, 'imagedestroy'])->name('admin.product-image.destroy');
+
 
         Route::get('/website_settings', [WebsiteSettingsController::class, 'index'])->name('admin.website_settings.index');
         Route::post('/website_settings', [WebsiteSettingsController::class, 'store'])->name('admin.website_settings.store');

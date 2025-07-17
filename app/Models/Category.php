@@ -23,9 +23,9 @@ class Category extends Model
 
         static::creating(function ($category) {
             $category->slug = Str::slug($category->title);
-            $category->meta_title = $category->title . ' - Buy & Sell | Mr.Ads.lk';
+            $category->meta_title = $category->title . ' - Buy @ | Dealzbay.lk';
             $category->meta_keyword = implode(', ', explode(' ', strtolower($category->title)));
-            $category->meta_description = 'Discover various ' . strtolower($category->title) . ' available for sale on Mr.Ads.lk. Find the best deals now!';
+            $category->meta_description = 'Discover various ' . strtolower($category->title) . ' more products available on Dealzbay.lk. Find the best deals now!';
         });
     }
 

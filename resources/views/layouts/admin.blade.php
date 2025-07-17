@@ -84,6 +84,7 @@ align-items: center;
             flex-direction: column;
             min-height: 100vh;
             margin: 0;
+            /* cursor: url('/images/cursor.cur') 10 10, auto; */
         }
 
         .container-scroller {
