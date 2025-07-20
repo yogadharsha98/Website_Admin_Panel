@@ -152,29 +152,28 @@ class CategoryController extends Controller
     }
 
     public function destroy($id)
-{
-    try {
-        $category = Category::findOrFail($id);
+    {
+        try {
+            $category = Category::findOrFail($id);
 
-        // Delete the image file from public folder if it exists
-        if ($category->image && file_exists(public_path($category->image))) {
-            unlink(public_path($category->image));
+            // Delete the image file from public folder if it exists
+            if ($category->image && file_exists(public_path($category->image))) {
+                unlink(public_path($category->image));
+            }
+
+            $category->delete();
+
+            return redirect()->route('admin.category.index')
+                ->with('success', 'Category deleted successfully.');
+        } catch (\Exception $e) {
+            \Log::error('Error deleting category.', [
+                'id' => $id,
+                'message' => $e->getMessage(),
+            ]);
+
+            return redirect()->route('admin.category.index')
+                ->with('error', 'An error occurred while deleting the category.');
         }
-
-        $category->delete();
-
-        return redirect()->route('admin.category.index')
-            ->with('success', 'Category deleted successfully.');
-    } catch (\Exception $e) {
-        \Log::error('Error deleting category.', [
-            'id' => $id,
-            'message' => $e->getMessage(),
-        ]);
-
-        return redirect()->route('admin.category.index')
-            ->with('error', 'An error occurred while deleting the category.');
     }
-}
-
 
 }

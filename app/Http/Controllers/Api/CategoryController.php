@@ -2,77 +2,126 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Category;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
     public function index()
     {
-        return response()->json(Category::orderBy('id', 'DESC')->paginate(15));
+        $categories = Category::all();
+        return response()->json(['success' => true, 'data' => $categories], 200);
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255',
-            'is_active' => 'nullable|boolean',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'is_active' => 'nullable|boolean',
         ]);
 
-        $imagePath = $request->file('image')->store('category', 'public');
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
+        }
 
-        $category = Category::create([
-            'title' => $request->title,
-            'slug' => Str::slug($request->slug ?? $request->title),
-            'is_active' => $request->is_active ? '1' : '0',
-            'image' => $imagePath,
-        ]);
+        try {
+            $uploadPath = 'uploads/category/';
+            $image = $request->file('image');
+            $imageName = time() . '_' . preg_replace('/[^A-Za-z0-9_\-\.]/', '', $image->getClientOriginalName());
+            $image->move(public_path($uploadPath), $imageName);
 
-        return response()->json(['message' => 'Category created', 'category' => $category], 201);
+            $category = Category::create([
+                'title' => $request->title,
+                'image' => $uploadPath . $imageName,
+                'is_active' => $request->has('is_active') ? 1 : 0,
+            ]);
+
+            return response()->json(['success' => true, 'data' => $category], 201);
+        } catch (\Exception $e) {
+            Log::error('API Category store failed', ['message' => $e->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Category creation failed.'], 500);
+        }
     }
 
     public function show($id)
     {
-        $category = Category::findOrFail($id);
-        return response()->json($category);
+        $category = Category::find($id);
+
+        if (!$category) {
+            return response()->json(['success' => false, 'message' => 'Category not found.'], 404);
+        }
+
+        return response()->json(['success' => true, 'data' => $category], 200);
     }
 
     public function update(Request $request, $id)
     {
-        $category = Category::findOrFail($id);
+        $category = Category::find($id);
 
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255',
-            'is_active' => 'nullable|boolean',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-
-        $data = [
-            'title' => $request->title,
-            'slug' => Str::slug($request->slug ?? $request->title),
-            'is_active' => $request->is_active ? '1' : '0',
-        ];
-
-        if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('category', 'public');
+        if (!$category) {
+            return response()->json(['success' => false, 'message' => 'Category not found.'], 404);
         }
 
-        $category->update($data);
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'is_active' => 'nullable|boolean',
+        ]);
 
-        return response()->json(['message' => 'Category updated', 'category' => $category]);
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
+        }
+
+        try {
+            if ($request->hasFile('image')) {
+                if ($category->image && file_exists(public_path($category->image))) {
+                    unlink(public_path($category->image));
+                }
+
+                $uploadPath = 'uploads/category/';
+                $image = $request->file('image');
+                $imageName = time() . '_' . preg_replace('/[^A-Za-z0-9_\-\.]/', '', $image->getClientOriginalName());
+                $image->move(public_path($uploadPath), $imageName);
+                $category->image = $uploadPath . $imageName;
+            }
+
+            $category->title = $request->title;
+            $category->is_active = $request->has('is_active') ? 1 : 0;
+            $category->save();
+
+            return response()->json(['success' => true, 'data' => $category], 200);
+        } catch (\Exception $e) {
+            Log::error('API Category update failed', ['message' => $e->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Category update failed.'], 500);
+        }
     }
 
     public function destroy($id)
     {
-        $category = Category::findOrFail($id);
-        $category->delete();
-        return response()->json(['message' => 'Category deleted']);
+        $category = Category::find($id);
+
+        if (!$category) {
+            return response()->json(['success' => false, 'message' => 'Category not found.'], 404);
+        }
+
+        try {
+            if ($category->image && file_exists(public_path($category->image))) {
+                unlink(public_path($category->image));
+            }
+
+            $category->delete();
+
+            return response()->json(['success' => true, 'message' => 'Category deleted successfully.'], 200);
+        } catch (\Exception $e) {
+            Log::error('API Category delete failed', ['message' => $e->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Failed to delete category.'], 500);
+        }
     }
 }
 

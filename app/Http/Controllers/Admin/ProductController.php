@@ -293,4 +293,44 @@ class ProductController extends Controller
         }
     }
 
+    public function destroy($id)
+{
+    try {
+        $product = Product::findOrFail($id);
+
+        // Delete main image
+        if ($product->main_image && \File::exists(public_path($product->main_image))) {
+            \File::delete(public_path($product->main_image));
+            \Log::info('Main product image deleted', ['path' => $product->main_image]);
+        }
+
+        // Delete all related gallery images
+        foreach ($product->images as $image) {
+            if (\File::exists(public_path($image->image_path))) {
+                \File::delete(public_path($image->image_path));
+            }
+            $image->delete();
+        }
+
+        // Delete custom fields (if applicable)
+        \DB::table('product_custom_field_values')->where('product_id', $product->id)->delete();
+
+        // Delete the product
+        $product->delete();
+
+        \Log::info('Product deleted successfully', ['product_id' => $id]);
+        return redirect()->route('admin.product.index')->with('success', 'Product deleted successfully.');
+
+    } catch (\Exception $e) {
+        \Log::error('Product deletion failed', [
+            'product_id' => $id,
+            'message' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+        ]);
+
+        return redirect()->route('admin.product.index')->with('failure', 'Error deleting product.');
+    }
+}
+
+
 }
