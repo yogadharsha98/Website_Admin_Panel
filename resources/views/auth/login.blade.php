@@ -6,6 +6,12 @@
             <div class="screen__content">
                 <!-- Session Status -->
                 <x-auth-session-status class="mb-4" :status="session('status')" />
+                @if ($errors->has('password'))
+    <script>
+        console.log(@json($errors->first('password')));
+    </script>
+@endif
+
                 <form class="login" method="POST" action="{{ route('login') }}">
                     @csrf
                     <!-- Form Title -->

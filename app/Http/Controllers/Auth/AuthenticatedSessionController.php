@@ -46,6 +46,7 @@ class AuthenticatedSessionController extends Controller
 
         return redirect()->back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
+            'password' => 'The provided credentials do not match our records.'
         ])->withInput($request->only('email'));
     }
     /**
